@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block content %}
+<h1>Students</h1>
+<form class="mb-3">
+  <input name="q" value="{{ query }}" placeholder="Search students" /><button>
+    Search
+  </button>
+  <a href="{% url 'students:add' %}">Add student</a>
+</form>
+<ul>
+  {% for s in students %}
+  <li>
+    <a href="{% url 'students:detail' s.pk %}"
+      >{{ s.student_id }} - {{ s.user.get_full_name|default:s.user.username
+      }}</a
+    >
+  </li>
+  {% empty %}
+  <li>No students found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

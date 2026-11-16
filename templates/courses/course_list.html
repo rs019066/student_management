@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block content %}
+<h1>Courses</h1>
+<form class="mb-3">
+  <input name="q" value="{{ query }}" placeholder="Search courses" /><button>
+    Search
+  </button>
+  <a href="{% url 'courses:add' %}">Add course</a>
+</form>
+<ul>
+  {% for c in courses %}
+  <li>
+    <a href="{% url 'courses:edit' c.pk %}">{{ c.code }} - {{ c.name }}</a> ({{
+    c.department.name }})
+  </li>
+  {% empty %}
+  <li>No courses found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

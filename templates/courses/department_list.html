@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block content %}
+<h1>Departments</h1>
+<a href="{% url 'courses:department_add' %}">Add department</a>
+<ul>
+  {% for d in departments %}
+  <li>{{ d.code }} - {{ d.name }}</li>
+  {% empty %}
+  <li>No departments found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
