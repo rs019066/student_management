@@ -1,4 +1,7 @@
 {% extends "base.html" %}{% block content %}
+{% if user.role != 'student' %}
+  <a href="{% url 'attendance:mark' %}" class="btn btn-primary mb-3">Take attendance</a>
+{% endif %}
 <h1>Attendance</h1>
 <a href="{% url 'attendance:add' %}">Record attendance</a>
 <ul>
