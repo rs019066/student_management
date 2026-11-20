@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block content %}
+<h1>Subjects</h1>
+<a href="{% url 'courses:subject_add' %}">Add subject</a>
+<ul>
+  {% for s in subjects %}
+  <li>{{ s.code }} - {{ s.name }} ({{ s.course.name }})</li>
+  {% empty %}
+  <li>No subjects found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

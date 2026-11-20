@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% block content %}
+<h1>Student fees</h1>
+<ul>
+  {% for fee in fees %}
+  <li>
+    {{ fee.student }} — {{ fee.fee_structure.name }} — {{ fee.amount_due }} ({{
+    fee.get_status_display }})
+  </li>
+  {% empty %}
+  <li>No student fees found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

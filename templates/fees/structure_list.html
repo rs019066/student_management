@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block content %}
+<h1>Fee structures</h1>
+<ul>
+  {% for s in structures %}
+  <li>{{ s.name }} — {{ s.course }} — {{ s.amount }}</li>
+  {% empty %}
+  <li>No fee structures found.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
