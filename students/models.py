@@ -15,3 +15,9 @@ class Student(models.Model):
 
     def __str__(self):
         return f"{self.student_id} - {self.user.get_full_name() or self.user.username}"
+    
+    class Meta:
+        ordering = ["student_id"]
+
+    def __str__(self):
+        return f"{self.student_id} - {self.user.get_full_name() or self.user.username}"

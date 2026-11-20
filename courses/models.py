@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 
 class Department(models.Model):
     name = models.CharField(max_length=120, unique=True)
@@ -34,6 +34,14 @@ class Subject(models.Model):
     code = models.CharField(max_length=30)
     credits = models.PositiveSmallIntegerField(default=3)
     semester = models.PositiveSmallIntegerField(default=1)
+    teacher = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="teaching_subjects",
+        limit_choices_to={"role": "teacher"},
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:
