@@ -25,6 +25,12 @@ class StudentForm(forms.ModelForm):
                 self.fields[name].initial = getattr(user, name)
             self.fields["password"].required = False
 
+            for field in self.fields.values():
+                field.widget.attrs.setdefault("class", "form-control")
+
+            self.fields["username"].widget.attrs["autocomplete"] = "off"
+            self.fields["password"].widget.attrs["autocomplete"] = "new-password"
+
     def clean_username(self):
         username = self.cleaned_data["username"]
         qs = User.objects.filter(username=username)

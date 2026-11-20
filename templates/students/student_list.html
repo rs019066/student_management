@@ -1,21 +1,40 @@
-{% extends "base.html" %}{% block content %}
-<h1>Students</h1>
-<form class="mb-3">
-  <input name="q" value="{{ query }}" placeholder="Search students" /><button>
-    Search
-  </button>
-  <a href="{% url 'students:add' %}">Add student</a>
+{% extends 'base.html' %}
+{% block title %}Students{% endblock %}
+{% block page_title %}Students{% endblock %}
+{% block content %}
+
+{% if user.is_superuser or user.role == 'admin' %}
+  <a href="{% url 'students:add' %}" class="btn btn-primary mb-3">Add student</a>
+{% endif %}
+
+<form method="get" class="d-flex gap-2 mb-3">
+  <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search by id, username or name">
+  <button class="btn btn-outline-secondary">Search</button>
 </form>
-<ul>
-  {% for s in students %}
-  <li>
-    <a href="{% url 'students:detail' s.pk %}"
-      >{{ s.student_id }} - {{ s.user.get_full_name|default:s.user.username
-      }}</a
-    >
-  </li>
-  {% empty %}
-  <li>No students found.</li>
-  {% endfor %}
-</ul>
+
+<table class="table table-hover bg-white">
+  <thead>
+    <tr><th>Student ID</th><th>Name</th><th>Username</th><th>Phone</th><th></th></tr>
+  </thead>
+  <tbody>
+    {% for student in students %}
+    <tr>
+      <td>{{ student.student_id }}</td>
+      <td>{{ student.user.get_full_name|default:"-" }}</td>
+      <td>{{ student.user.username }}</td>
+      <td>{{ student.phone|default:"-" }}</td>
+      <td class="text-end">
+        <a href="{% url 'students:detail' student.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+        {% if user.is_superuser or user.role == 'admin' %}
+          <a href="{% url 'students:edit' student.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+          <a href="{% url 'students:delete' student.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5" class="text-center text-muted">No students found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 {% endblock %}

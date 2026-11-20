@@ -11,4 +11,7 @@ urlpatterns = [
     path('dashboard/admin/', views.admin_dashboard, name='admin_dashboard'),
     path('dashboard/teacher/', views.teacher_dashboard, name='teacher_dashboard'),
     path('dashboard/student/', views.student_dashboard, name='student_dashboard'),
+    path('password-change/', auth_views.PasswordChangeView.as_view(
+        template_name='accounts/password_change.html',
+        success_url='/accounts/dashboard/'), name='password_change'),
 ]
