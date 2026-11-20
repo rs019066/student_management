@@ -1,7 +1,11 @@
+
 <aside class="sidebar bg-dark text-white p-3">
   <a href="{% url 'accounts:dashboard' %}" class="d-block mb-4 fs-5 text-white text-decoration-none">SMS</a>
+
   <ul class="nav flex-column">
-    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+    </li>
 
     {% if user.is_superuser or user.role == 'admin' %}
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
@@ -11,17 +15,22 @@
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:enrollments' %}">Enrollments</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="#">Reports</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:exams' %}">Exams and Marks</a></li>
+
     {% elif user.role == 'teacher' %}
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:subjects' %}">Subjects</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">Marks Entry</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:exams' %}">Exams and Marks</a></li>
+
     {% else %}
       <li class="nav-item"><a class="nav-link text-white-50" href="#">My Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:mark' %}">Take Attendance</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">My Results</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:my' %}">My Results</a></li>
     {% endif %}
 
-    <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'accounts:password_change' %}">Change Password</a></li>
+    <li class="nav-item">
+      <a class="nav-link text-white-50" href="{% url 'accounts:password_change' %}">Change Password</a>
+    </li>
   </ul>
 </aside>

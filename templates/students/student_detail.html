@@ -8,3 +8,6 @@
   <a href="{% url 'students:delete' student.pk %}">Delete</a>
 </p>
 {% endblock %}
+{% if user.role != 'student' %}
+  <a href="{% url 'results:report_card' student.pk %}" class="btn btn-outline-primary">Report card</a>
+{% endif %}
