@@ -1,11 +1,16 @@
-{% extends "base.html" %}{% block content %}
-<h1>Departments</h1>
-<a href="{% url 'courses:department_add' %}">Add department</a>
-<ul>
-  {% for d in departments %}
-  <li>{{ d.code }} - {{ d.name }}</li>
-  {% empty %}
-  <li>No departments found.</li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block title %}Departments{% endblock %}
+{% block page_title %}Departments{% endblock %}
+{% block content %}
+<a href="{% url 'courses:department_add' %}" class="btn btn-primary mb-3">Add department</a>
+<table class="table table-hover bg-white">
+  <thead><tr><th>Code</th><th>Name</th></tr></thead>
+  <tbody>
+    {% for d in departments %}
+      <tr><td>{{ d.code }}</td><td>{{ d.name }}</td></tr>
+    {% empty %}
+      <tr><td colspan="2" class="text-center text-muted">No departments yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

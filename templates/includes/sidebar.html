@@ -5,14 +5,16 @@
 
     {% if user.is_superuser or user.role == 'admin' %}
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">Courses</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">Subjects</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">Enrollments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:departments' %}">Departments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:list' %}">Courses</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:subjects' %}">Subjects</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:enrollments' %}">Enrollments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="#">Reports</a></li>
     {% elif user.role == 'teacher' %}
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">My Subjects</a></li>
-      <li class="nav-item"><a class="nav-link text-white-50" href="#">Attendance</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:subjects' %}">Subjects</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="#">Marks Entry</a></li>
     {% else %}
       <li class="nav-item"><a class="nav-link text-white-50" href="#">My Attendance</a></li>

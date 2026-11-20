@@ -1,19 +1,29 @@
-{% extends "base.html" %}{% block content %}
-<h1>Courses</h1>
-<form class="mb-3">
-  <input name="q" value="{{ query }}" placeholder="Search courses" /><button>
-    Search
-  </button>
-  <a href="{% url 'courses:add' %}">Add course</a>
-</form>
-<ul>
-  {% for c in courses %}
-  <li>
-    <a href="{% url 'courses:edit' c.pk %}">{{ c.code }} - {{ c.name }}</a> ({{
-    c.department.name }})
-  </li>
-  {% empty %}
-  <li>No courses found.</li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block title %}Courses{% endblock %}
+{% block page_title %}Courses{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <form method="get" class="d-flex gap-2">
+    <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Search by name or code">
+    <button class="btn btn-outline-secondary">Search</button>
+  </form>
+  <a href="{% url 'courses:add' %}" class="btn btn-primary">Add course</a>
+</div>
+<table class="table table-hover bg-white">
+  <thead><tr><th>Code</th><th>Name</th><th>Department</th><th>Years</th><th>Status</th><th></th></tr></thead>
+  <tbody>
+    {% for c in courses %}
+      <tr>
+        <td>{{ c.code }}</td>
+        <td>{{ c.name }}</td>
+        <td>{{ c.department.name }}</td>
+        <td>{{ c.duration_years }}</td>
+        <td>{% if c.is_active %}<span class="badge text-bg-success">Active</span>{% else %}<span class="badge text-bg-secondary">Inactive</span>{% endif %}</td>
+        <td class="text-end"><a href="{% url 'courses:edit' c.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No courses found.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}
