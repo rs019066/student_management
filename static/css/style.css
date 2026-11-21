@@ -2,3 +2,9 @@ body { background-color: #f5f6fa; }
 .sidebar { width: 230px; min-height: 100vh; flex-shrink: 0; }
 .sidebar .nav-link:hover { color: #fff !important; }
 @media (max-width: 768px) { .sidebar { width: 160px; } }
+
+.hero {
+  background: linear-gradient(135deg, #1f2937 0%, #2563eb 100%);
+  color: #fff;
+  padding: 5rem 0;
+}

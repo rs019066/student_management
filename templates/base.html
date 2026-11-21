@@ -22,14 +22,14 @@
         </form>
       </nav>
       <main class="p-4">
-        {% include 'includes/messages.html' %}
+        {% include 'includes/message.html' %}
         {% block content %}{% endblock %}
       </main>
     </div>
   </div>
   {% else %}
   <main class="container py-5">
-    {% include 'includes/messages.html' %}
+    {% include 'includes/message.html' %}
     {% block auth_content %}{% block content_public %}{% endblock %}{% endblock %}
   </main>
   {% endif %}

@@ -46,13 +46,15 @@ INSTALLED_APPS = [
     'reports',
     'fees',
     'payments',
+    'pages',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
-LOGOUT_REDIRECT_URL = 'accounts:login'
+LOGOUT_REDIRECT_URL = 'pages:home'
+ALLOW_STUDENT_SIGNUP = True
 
 TIME_ZONE = 'Asia/Kathmandu'
 
@@ -84,6 +86,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'pages.context_processors.site',
             ],
         },
     },

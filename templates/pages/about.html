@@ -1,0 +1,21 @@
+{% extends 'base_public.html' %}
+{% block title %}About - {{ site.name }}{% endblock %}
+{% block content %}
+<section class="container py-5" style="max-width: 900px;">
+  <h1 class="mb-3">About us</h1>
+  <p class="lead">{{ site.name }} is the college's system for keeping student records in one place, so staff spend less time on paperwork and students always know where they stand.</p>
+
+  <h4 class="mt-5">Our goal</h4>
+  <p class="text-muted">Replace paper registers and scattered spreadsheets with a single, secure website that every student, teacher and administrator can use.</p>
+
+  <h4 class="mt-5">Who uses it</h4>
+  <div class="row g-3">
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Students</h5><p class="text-muted mb-0">View attendance, results, fees and receipts. Students can sign up on this site.</p></div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Teachers</h5><p class="text-muted mb-0">Take attendance, enter marks and download reports for their own subjects.</p></div></div></div>
+    <div class="col-md-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Administrators</h5><p class="text-muted mb-0">Manage students, courses, enrollments, fees and teacher accounts.</p></div></div></div>
+  </div>
+
+  <h4 class="mt-5">Built by</h4>
+  <p class="text-muted">A team of three BCA students using Python and Django. Replace this paragraph with your team's names and project details.</p>
+</section>
+{% endblock %}

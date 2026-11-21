@@ -12,5 +12,5 @@ urlpatterns = [
     path('reports/', include('reports.urls')),
     path('fees/', include('fees.urls')),
     path('payments/', include('payments.urls')),
-    path('', lambda request: redirect('accounts:dashboard')),
+    path('', include('pages.urls')),
 ]

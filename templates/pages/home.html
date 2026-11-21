@@ -1,0 +1,50 @@
+{% extends 'base_public.html' %}
+{% block title %}{{ site.name }}{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container text-center">
+    <h1 class="display-5 fw-bold">{{ site.name }}</h1>
+    <p class="lead mx-auto" style="max-width: 640px;">
+      One place for {{ site.college }} to manage students, courses, attendance, results and fees.
+    </p>
+    <div class="d-flex justify-content-center gap-2 flex-wrap mt-4">
+      {% if user.is_authenticated %}
+        <a href="{% url 'accounts:dashboard' %}" class="btn btn-light btn-lg">Go to dashboard</a>
+      {% else %}
+        <a href="{% url 'accounts:login' %}" class="btn btn-light btn-lg">Login</a>
+        {% if allow_signup %}<a href="{% url 'pages:signup' %}" class="btn btn-outline-light btn-lg">Student sign up</a>{% endif %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <h2 class="text-center mb-4">What you can do</h2>
+  <div class="row g-4">
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Attendance</h5><p class="text-muted mb-0">Teachers mark the whole class in one page. Students check their own attendance percentage at any time.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Exams and results</h5><p class="text-muted mb-0">Teachers enter marks, and students see their report card with grades and pass or fail.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Fees and receipts</h5><p class="text-muted mb-0">Students see what they owe and what they have paid, and every payment gets a printable receipt.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Courses and subjects</h5><p class="text-muted mb-0">Departments, courses, subjects and enrollments are all managed in one place.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Reports</h5><p class="text-muted mb-0">Attendance, results and fee reports can be downloaded as CSV or PDF.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Role-based access</h5><p class="text-muted mb-0">Admins, teachers and students each see only the pages and data meant for them.</p></div></div></div>
+  </div>
+</section>
+
+<section class="bg-white py-5 border-top border-bottom">
+  <div class="container">
+    <h2 class="text-center mb-4">How it works for students</h2>
+    <div class="row g-4 text-center">
+      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">1</div><h5>Sign up</h5><p class="text-muted">Create your student account in a minute.</p></div>
+      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">2</div><h5>Get enrolled</h5><p class="text-muted">The admin enrolls you in your course.</p></div>
+      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">3</div><h5>Track everything</h5><p class="text-muted">See attendance, results and fees on your dashboard.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5 text-center">
+  <h2>Have a question?</h2>
+  <p class="text-muted">Our team is happy to help.</p>
+  <a href="{% url 'pages:contact' %}" class="btn btn-primary">Contact us</a>
+</section>
+{% endblock %}
