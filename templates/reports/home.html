@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Reports{% endblock %}
+{% block page_title %}Reports{% endblock %}
+{% block content %}
+<div class="row g-3" style="max-width: 820px;">
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100"><div class="card-body">
+      <h5>Attendance summary</h5>
+      <p class="text-muted">Present, late and absent counts and attendance percentage for every student in a subject.</p>
+      <a href="{% url 'reports:attendance' %}" class="btn btn-primary">Open</a>
+    </div></div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100"><div class="card-body">
+      <h5>Result sheet</h5>
+      <p class="text-muted">Marks, grade and pass or fail for every student in an exam.</p>
+      <a href="{% url 'reports:results' %}" class="btn btn-primary">Open</a>
+    </div></div>
+  </div>
+</div>
+{% endblock %}
