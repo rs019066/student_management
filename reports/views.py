@@ -3,6 +3,8 @@ from django.db.models import Count, Q
 from django.shortcuts import render
 from django.utils.dateparse import parse_date
 from django.utils.text import slugify
+from django.utils import timezone
+from fees.models import StudentFee
 
 from accounts.decorators import role_required
 from attendance.models import Attendance
@@ -10,6 +12,7 @@ from courses.models import Subject
 from results.models import Exam, Result
 from students.models import Student
 from .utils import csv_response, pdf_response
+from courses.models import Course, Subject
 
 LOW_ATTENDANCE = 75  # percent; below this the row is shown in red
 
@@ -186,5 +189,61 @@ def result_sheet(request):
     params.pop("export", None)
     return render(request, "reports/results.html", {
         "exams": exams, "exam": exam, "rows": rows, "summary": summary,
+        "querystring": params.urlencode(),
+    })
+
+# ---------- Fee report (admin only) ----------
+FEE_HEADERS = ["Student ID", "Name", "Fee", "Due date", "Amount due", "Paid", "Balance", "Status"]
+
+
+@role_required("admin")
+def fee_report(request):
+    today = timezone.localdate()
+    courses = Course.objects.order_by("code")
+    course_id = request.GET.get("course", "")
+    status = request.GET.get("status", "")
+
+    fees = StudentFee.objects.select_related("student__user", "fee_structure__course")
+    course = None
+    if course_id.isdigit():
+        course = courses.filter(pk=course_id).first()
+        if course:
+            fees = fees.filter(fee_structure__course=course)
+    if status in dict(StudentFee.Status.choices):
+        fees = fees.filter(status=status)
+    else:
+        status = ""
+    fees = list(fees.order_by("student__student_id", "fee_structure__name"))
+
+    counted = [f for f in fees if f.status != StudentFee.Status.WAIVED]
+    total_due = sum((f.amount_due for f in counted), 0)
+    total_paid = sum((f.amount_paid for f in counted), 0)
+    totals = {"due": total_due, "paid": total_paid, "balance": max(total_due - total_paid, 0)}
+
+    rows = [{
+        "fee": f,
+        "name": _name(f.student),
+        "overdue": bool(f.fee_structure.due_date and f.fee_structure.due_date < today and f.balance > 0),
+    } for f in fees]
+
+    kind = request.GET.get("export")
+    if rows and kind in ("csv", "pdf"):
+        data = [[
+            r["fee"].student.student_id, r["name"], r["fee"].fee_structure.name,
+            r["fee"].fee_structure.due_date or "-",
+            _num(r["fee"].amount_due), _num(r["fee"].amount_paid), _num(r["fee"].balance),
+            r["fee"].get_status_display(),
+        ] for r in rows]
+        data.append(["", "TOTAL", "", "", _num(totals["due"]), _num(totals["paid"]), _num(totals["balance"]), ""])
+        label = course.code if course else "All courses"
+        return _export(kind, "fee_report", "Fee Report",
+                       f"{label} | {dict(StudentFee.Status.choices).get(status, 'All statuses')} | {today}",
+                       FEE_HEADERS, data)
+
+    params = request.GET.copy()
+    params.pop("export", None)
+    return render(request, "reports/fees.html", {
+        "rows": rows, "totals": totals, "courses": courses, "course": course,
+        "status": status, "statuses": StudentFee.Status.choices,
         "querystring": params.urlencode(),
     })

@@ -9,11 +9,22 @@
   <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active courses</div><div class="fs-3">{{ course_count }}</div></div></div>
   <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active subjects</div><div class="fs-3">{{ subject_count }}</div></div></div>
   <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active enrollments</div><div class="fs-3">{{ enrollment_count }}</div></div></div>
+
   <div class="col-6 col-lg-3">
     <div class="card card-body shadow-sm">
       <div class="text-muted small">Today's attendance</div>
       <div class="fs-3">{% if today_percentage is not None %}{{ today_percentage }}%{% else %}-{% endif %}</div>
       <div class="text-muted small">{{ today_total }} record{{ today_total|pluralize }} marked</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Fees collected</div><div class="fs-3">Rs. {{ fee_paid|floatformat:0 }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Fees outstanding</div><div class="fs-3">Rs. {{ fee_balance|floatformat:0 }}</div></div></div>
+  <div class="col-6 col-lg-3">
+    <div class="card card-body shadow-sm">
+      <div class="text-muted small">Overdue fees</div>
+      <div class="fs-3 {% if overdue_count %}text-danger{% endif %}">{{ overdue_count }}</div>
+      <a href="{% url 'fees:list' %}?status=pending" class="small">View fees</a>
     </div>
   </div>
 </div>

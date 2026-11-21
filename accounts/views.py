@@ -9,6 +9,7 @@ from results.models import Exam, Result
 from students.models import Student
 from .decorators import role_required
 from .models import User
+from fees.models import StudentFee
 
 ATTENDED = ["present", "late"]
 
@@ -30,6 +31,12 @@ def admin_dashboard(request):
     today_records = Attendance.objects.filter(date=today)
     today_total = today_records.count()
     today_attended = today_records.filter(status__in=ATTENDED).count()
+    fee_totals = StudentFee.objects.exclude(status="waived").aggregate(due=Sum("amount_due"), paid=Sum("amount_paid"))
+    fee_due = fee_totals["due"] or 0
+    fee_paid = fee_totals["paid"] or 0
+    overdue_count = StudentFee.objects.filter(
+        status__in=["pending", "partial"], fee_structure__due_date__lt=today
+    ).count()
     context = {
         "student_count": Student.objects.count(),
         "teacher_count": User.objects.filter(role="teacher").count(),
@@ -40,6 +47,9 @@ def admin_dashboard(request):
         "today_percentage": round(today_attended / today_total * 100, 1) if today_total else None,
         "recent_students": Student.objects.select_related("user").order_by("-id")[:5],
         "recent_exams": Exam.objects.select_related("subject")[:5],
+        "fee_paid": fee_paid,
+        "fee_balance": max(fee_due - fee_paid, 0),
+        "overdue_count": overdue_count,
     }
     return render(request, "accounts/admin_dashboard.html", context)
 
@@ -83,12 +93,19 @@ def student_dashboard(request):
         total = records.count()
         attended = records.filter(status__in=ATTENDED).count()
         totals = Result.objects.filter(student=student).aggregate(m=Sum("marks_obtained"), f=Sum("exam__full_marks"))
+        my_fees = StudentFee.objects.filter(student=student).exclude(status="waived").select_related("fee_structure")
+        fee_sums = my_fees.aggregate(due=Sum("amount_due"), paid=Sum("amount_paid"))
+        fee_balance = max((fee_sums["due"] or 0) - (fee_sums["paid"] or 0), 0)
+        unpaid_fee = next((f for f in my_fees if f.balance > 0), None)
         context.update({
+            "fee_balance": fee_balance,
+            "unpaid_fee": unpaid_fee,
             "enrollments": student.enrollments.filter(status="active").select_related("course"),
             "attendance_total": total,
             "attendance_percentage": round(attended / total * 100, 1) if total else None,
             "result_percentage": round(totals["m"] / totals["f"] * 100, 2) if totals["f"] else None,
             "latest_results": Result.objects.filter(student=student)
                 .select_related("exam__subject").order_by("-exam__date")[:5],
+                
         })
     return render(request, "accounts/student_dashboard.html", context)

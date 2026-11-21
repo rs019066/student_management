@@ -17,5 +17,16 @@
       <a href="{% url 'reports:results' %}" class="btn btn-primary">Open</a>
     </div></div>
   </div>
+
+  {% if user.is_superuser or user.role == 'admin' %}
+  <div class="col-md-6">
+    <div class="card shadow-sm h-100"><div class="card-body">
+      <h5>Fee report</h5>
+      <p class="text-muted">Amount due, paid and balance for each student, with totals. Admins only.</p>
+      <a href="{% url 'fees:list' %}" class="btn btn-outline-secondary me-1">Student fees</a>
+      <a href="{% url 'reports:fees' %}" class="btn btn-primary">Open report</a>
+    </div></div>
+  </div>
+  {% endif %}
 </div>
 {% endblock %}
