@@ -1,10 +1,42 @@
-{% extends "base.html" %}{% block content %}
-<h1>Fee structures</h1>
-<ul>
-  {% for s in structures %}
-  <li>{{ s.name }} — {{ s.course }} — {{ s.amount }}</li>
-  {% empty %}
-  <li>No fee structures found.</li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block title %}Fee structures{% endblock %}
+{% block page_title %}Fee structures{% endblock %}
+{% block content %}
+<div class="mb-3 d-flex gap-2">
+  <a href="{% url 'fees:structure_add' %}" class="btn btn-primary">Add fee structure</a>
+  <a href="{% url 'fees:list' %}" class="btn btn-outline-secondary">Student fees</a>
+</div>
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Name</th><th>Course</th><th>Amount</th><th>Due date</th><th>Assigned to</th><th>Status</th><th></th></tr>
+      </thead>
+      <tbody>
+        {% for s in structures %}
+        <tr>
+          <td>{{ s.name }}</td>
+          <td>{{ s.course.code }}</td>
+          <td>Rs. {{ s.amount|floatformat:2 }}</td>
+          <td>{{ s.due_date|date:"Y-m-d"|default:"-" }}</td>
+          <td>{{ s.assigned }} student{{ s.assigned|pluralize }}</td>
+          <td>{% if s.is_active %}<span class="badge text-bg-success">Active</span>{% else %}<span class="badge text-bg-secondary">Inactive</span>{% endif %}</td>
+          <td class="text-end">
+            <a href="{% url 'fees:structure_edit' s.pk %}" class="btn btn-sm btn-outline-secondary">Edit</a>
+            {% if s.is_active %}
+            <form method="post" action="{% url 'fees:structure_generate' s.pk %}" class="d-inline"
+                  onsubmit="return confirm('Assign this fee to every actively enrolled student in {{ s.course.code }}?');">
+              {% csrf_token %}
+              <button class="btn btn-sm btn-outline-primary">Assign to students</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No fee structures yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

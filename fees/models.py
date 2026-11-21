@@ -1,5 +1,5 @@
 from django.db import models
-
+from decimal import Decimal
 
 class FeeStructure(models.Model):
     name = models.CharField(max_length=120)
@@ -38,3 +38,8 @@ class StudentFee(models.Model):
 
     def __str__(self):
         return f"{self.student} - {self.fee_structure.name}"
+    @property
+    def balance(self):
+        if self.status == self.Status.WAIVED:
+            return Decimal("0")
+        return max(self.amount_due - self.amount_paid, Decimal("0"))

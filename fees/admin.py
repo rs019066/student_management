@@ -6,7 +6,6 @@ from .models import FeeStructure, StudentFee
 class FeeStructureAdmin(admin.ModelAdmin):
     list_display = ("name", "course", "amount", "due_date", "is_active")
     list_filter = ("course", "is_active")
-    search_fields = ("name", "course__name")
 
 
 @admin.register(StudentFee)

@@ -15,6 +15,9 @@
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:mark' %}">Take Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance Records</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:exams' %}">Exams and Marks</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:list' %}">Fees</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:structures' %}">Fee Structures</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'payments:list' %}">Payments</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'reports:home' %}">Reports</a></li>
 
     {% elif user.role == 'teacher' %}
@@ -28,6 +31,7 @@
     {% else %}
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">My Attendance</a></li>
       <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:my' %}">My Results</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:list' %}">My Fees</a></li>
     {% endif %}
 
     <li class="nav-item">

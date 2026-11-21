@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Pay fee{% endblock %}
+{% block page_title %}Pay fee{% endblock %}
+{% block content %}
+<div class="card shadow-sm" style="max-width: 560px;">
+  <div class="card-body">
+    <h5>{{ fee.fee_structure.name }}</h5>
+    <p class="mb-1">Amount to pay: <strong>Rs. {{ fee.balance|floatformat:2 }}</strong></p>
+    <div class="alert alert-info mt-3">
+      Online payment is not connected yet. Please pay at the college counter, and the admin will record it. You will then see your receipt here.
+    </div>
+    <a href="{% url 'fees:detail' fee.pk %}" class="btn btn-outline-secondary">Back</a>
+  </div>
+</div>
+{% endblock %}
