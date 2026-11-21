@@ -1,6 +1,63 @@
 {% extends 'base.html' %}
 {% block title %}Student Dashboard{% endblock %}
+{% block page_title %}Student Dashboard{% endblock %}
 {% block content %}
-<h3>Student Dashboard</h3>
-<p>Welcome, {{ user.username }}. Your attendance, results and fees will appear here.</p>
+
+{% if not student %}
+  <div class="alert alert-warning">No student profile is linked to your account yet. Please contact the admin.</div>
+{% else %}
+  <h5 class="mb-3">Welcome, {{ student.user.get_full_name|default:student.user.username }} <span class="text-muted fs-6">({{ student.student_id }})</span></h5>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card card-body shadow-sm">
+        <div class="text-muted small">Attendance</div>
+        <div class="fs-3">{% if attendance_percentage is not None %}{{ attendance_percentage }}%{% else %}-{% endif %}</div>
+        <div class="text-muted small">{{ attendance_total }} class{{ attendance_total|pluralize:",es" }} recorded</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-body shadow-sm">
+        <div class="text-muted small">Overall result</div>
+        <div class="fs-3">{% if result_percentage is not None %}{{ result_percentage }}%{% else %}-{% endif %}</div>
+        <a href="{% url 'results:my' %}" class="small">View report card</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card card-body shadow-sm">
+        <div class="text-muted small">Active courses</div>
+        {% for e in enrollments %}
+          <div>{{ e.course.name }} <span class="text-muted small">({{ e.academic_year }})</span></div>
+        {% empty %}
+          <div class="text-muted">Not enrolled yet.</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="card card-body shadow-sm mb-4 d-flex flex-row justify-content-between align-items-center">
+    <div>
+      <div class="text-muted small">Fee balance</div>
+      <div class="fs-3">Rs. {{ fee_balance|floatformat:2 }}</div>
+    </div>
+    <div>
+      {% if unpaid_fee %}
+        <a href="{% url 'payments:start' unpaid_fee.pk %}" class="btn btn-success">Pay now</a>
+      {% endif %}
+      <a href="{% url 'fees:list' %}" class="btn btn-outline-secondary">My fees</a>
+    </div>
+  </div>
+  <div class="card shadow-sm">
+    <div class="card-header">Latest results</div>
+    <ul class="list-group list-group-flush">
+      {% for r in latest_results %}
+        <li class="list-group-item d-flex justify-content-between">
+          <span>{{ r.exam.subject.name }} - {{ r.exam.name }}</span>
+          <span>{{ r.marks_obtained|floatformat:"-2" }} / {{ r.exam.full_marks|floatformat:"-2" }} ({{ r.grade }})</span>
+        </li>
+      {% empty %}
+        <li class="list-group-item text-muted">No results published yet.</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
 {% endblock %}

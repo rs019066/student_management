@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block title %}Result sheet{% endblock %}
+{% block page_title %}Result sheet{% endblock %}
+{% block content %}
+
+<form method="get" class="card card-body shadow-sm mb-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-8">
+      <label class="form-label" for="exam">Exam</label>
+      <select name="exam" id="exam" class="form-select" required>
+        <option value="">Select an exam</option>
+        {% for e in exams %}
+          <option value="{{ e.pk }}" {% if exam and exam.pk == e.pk %}selected{% endif %}>{{ e.name }} - {{ e.subject.name }} ({{ e.date|date:"Y-m-d" }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100">Show</button>
+    </div>
+  </div>
+</form>
+
+{% if exam %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+    <div>
+      <h5 class="mb-0">{{ exam.name }} - {{ exam.subject.name }}</h5>
+      <span class="text-muted small">Full marks {{ exam.full_marks|floatformat:"-2" }} | Pass marks {{ exam.pass_marks|floatformat:"-2" }}</span>
+    </div>
+    {% if rows %}
+    <div class="d-flex gap-2">
+      <a href="?{{ querystring }}&export=csv" class="btn btn-sm btn-outline-secondary">Download CSV</a>
+      <a href="?{{ querystring }}&export=pdf" class="btn btn-sm btn-outline-secondary">Download PDF</a>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if summary %}
+  <div class="row g-3 mb-3">
+    <div class="col-6 col-md-3"><div class="card card-body shadow-sm"><div class="text-muted small">Marks entered</div><div class="fs-4">{{ summary.entered }} / {{ summary.students }}</div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-body shadow-sm"><div class="text-muted small">Passed</div><div class="fs-4">{{ summary.passed }}</div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-body shadow-sm"><div class="text-muted small">Average marks</div><div class="fs-4">{% if summary.average is not None %}{{ summary.average|floatformat:"-2" }}{% else %}-{% endif %}</div></div></div>
+    <div class="col-6 col-md-3"><div class="card card-body shadow-sm"><div class="text-muted small">Highest marks</div><div class="fs-4">{% if summary.highest is not None %}{{ summary.highest|floatformat:"-2" }}{% else %}-{% endif %}</div></div></div>
+  </div>
+  {% endif %}
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr><th>Student ID</th><th>Name</th><th>Marks</th><th>%</th><th>Grade</th><th>Result</th></tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>{{ r.student_id }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.marks }}</td>
+            <td>{{ r.percentage }}</td>
+            <td>{{ r.grade }}</td>
+            <td>
+              {% if r.status == 'Pass' %}<span class="badge text-bg-success">Pass</span>
+              {% elif r.status == 'Fail' %}<span class="badge text-bg-danger">Fail</span>
+              {% else %}<span class="badge text-bg-secondary">Not entered</span>{% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center text-muted py-4">No students found for this exam.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}

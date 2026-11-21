@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Take attendance{% endblock %}
+{% block page_title %}Take attendance{% endblock %}
+{% block content %}
+
+<form method="get" class="card card-body shadow-sm mb-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-5">
+      <label class="form-label" for="subject">Subject</label>
+      <select name="subject" id="subject" class="form-select" required>
+        <option value="">Select a subject</option>
+        {% for s in subjects %}
+          <option value="{{ s.pk }}" {% if subject and subject.pk == s.pk %}selected{% endif %}>
+            {{ s.code }} - {{ s.name }} ({{ s.course.code }}, Sem {{ s.semester }})
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="date">Date</label>
+      <input type="date" name="date" id="date" value="{{ date|date:'Y-m-d' }}" max="{{ today|date:'Y-m-d' }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-outline-primary w-100">Load students</button>
+    </div>
+  </div>
+  {% if not subjects %}
+    <p class="text-muted small mt-3 mb-0">No subjects are assigned to you yet. Ask an admin to set you as the teacher of a subject.</p>
+  {% endif %}
+</form>
+
+{% if subject %}
+  {% if rows %}
+  <form method="post">
+    {% csrf_token %}
+    <input type="hidden" name="subject" value="{{ subject.pk }}">
+    <input type="hidden" name="date" value="{{ date|date:'Y-m-d' }}">
+
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="mb-0">{{ subject.name }} on {{ date|date:"Y-m-d" }}</h5>
+      <div class="d-flex align-items-center gap-2">
+        <span class="small text-muted">Set all to:</span>
+        <select id="set-all" class="form-select form-select-sm" style="width: auto;">
+          <option value="">-</option>
+          {% for value, label in statuses %}<option value="{{ value }}">{{ label }}</option>{% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead class="table-light">
+            <tr><th>Student ID</th><th>Name</th><th style="width: 180px;">Status</th><th>Remarks</th></tr>
+          </thead>
+          <tbody>
+            {% for row in rows %}
+            <tr>
+              <td>{{ row.student.student_id }}</td>
+              <td>{{ row.student.user.get_full_name|default:row.student.user.username }}</td>
+              <td>
+                <select name="status_{{ row.student.pk }}" class="form-select form-select-sm status-select">
+                  {% for value, label in statuses %}
+                    <option value="{{ value }}" {% if row.status == value %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+              </td>
+              <td><input type="text" name="remarks_{{ row.student.pk }}" value="{{ row.remarks }}" maxlength="255" class="form-control form-control-sm"></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <button class="btn btn-primary mt-3">Save attendance</button>
+    <a href="{% url 'attendance:list' %}" class="btn btn-outline-secondary mt-3">Back to records</a>
+  </form>
+
+  <script>
+    document.getElementById('set-all').addEventListener('change', function () {
+      if (!this.value) return;
+      document.querySelectorAll('.status-select').forEach(function (el) { el.value = this.value; }, this);
+    });
+  </script>
+  {% else %}
+    <div class="alert alert-warning">No students with an <strong>active enrollment</strong> in {{ subject.course.name }} yet. Add one under Enrollments first.</div>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

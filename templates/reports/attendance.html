@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}Attendance summary{% endblock %}
+{% block page_title %}Attendance summary{% endblock %}
+{% block content %}
+
+<form method="get" class="card card-body shadow-sm mb-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-5">
+      <label class="form-label" for="subject">Subject</label>
+      <select name="subject" id="subject" class="form-select" required>
+        <option value="">Select a subject</option>
+        {% for s in subjects %}
+          <option value="{{ s.pk }}" {% if subject and subject.pk == s.pk %}selected{% endif %}>{{ s.code }} - {{ s.name }} ({{ s.course.code }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="date_from">From</label>
+      <input type="date" name="date_from" id="date_from" value="{{ date_from|date:'Y-m-d' }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <label class="form-label" for="date_to">To</label>
+      <input type="date" name="date_to" id="date_to" value="{{ date_to|date:'Y-m-d' }}" class="form-control">
+    </div>
+    <div class="col-md-2">
+      <button class="btn btn-primary w-100">Show</button>
+    </div>
+  </div>
+</form>
+
+{% if subject %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-2 gap-2">
+    <h5 class="mb-0">{{ subject.name }} <span class="text-muted fs-6">({{ subject.course.name }})</span></h5>
+    {% if rows %}
+    <div class="d-flex gap-2">
+      <a href="?{{ querystring }}&export=csv" class="btn btn-sm btn-outline-secondary">Download CSV</a>
+      <a href="?{{ querystring }}&export=pdf" class="btn btn-sm btn-outline-secondary">Download PDF</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr><th>Student ID</th><th>Name</th><th>Total</th><th>Present</th><th>Late</th><th>Absent</th><th>Excused</th><th>Attendance</th></tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>{{ r.student_id }}</td>
+            <td>{{ r.name }}</td>
+            <td>{{ r.total }}</td>
+            <td>{{ r.present }}</td>
+            <td>{{ r.late }}</td>
+            <td>{{ r.absent }}</td>
+            <td>{{ r.excused }}</td>
+            <td class="{% if r.low %}text-danger fw-semibold{% endif %}">{% if r.percentage is not None %}{{ r.percentage }}%{% else %}-{% endif %}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="8" class="text-center text-muted py-4">No students or attendance found for this subject.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p class="text-muted small mt-2">Late counts as attended. Attendance below {{ low_limit }}% is shown in red.</p>
+{% endif %}
+{% endblock %}

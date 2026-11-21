@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Report card{% endblock %}
+{% block page_title %}Report card{% endblock %}
+{% block content %}
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h4 class="mb-1">{{ student.user.get_full_name|default:student.user.username }}</h4>
+    <div class="text-muted">Student ID: {{ student.student_id }}</div>
+  </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+  <div class="table-responsive">
+    <table class="table align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Subject</th><th>Exam</th><th>Marks</th><th>Full marks</th><th>%</th><th>Grade</th><th>Result</th></tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+        <tr>
+          <td>{{ r.exam.subject.name }}</td>
+          <td>{{ r.exam.name }}</td>
+          <td>{{ r.marks_obtained|floatformat:"-2" }}</td>
+          <td>{{ r.exam.full_marks|floatformat:"-2" }}</td>
+          <td>{{ r.percentage }}</td>
+          <td>{{ r.grade }}</td>
+          <td>{% if r.passed %}<span class="badge text-bg-success">Pass</span>{% else %}<span class="badge text-bg-danger">Fail</span>{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="7" class="text-center text-muted py-4">No results have been published yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% if results %}
+<div class="row g-3" style="max-width: 720px;">
+  <div class="col-md-4"><div class="card card-body shadow-sm"><div class="text-muted small">Total</div><div class="fs-4">{{ total|floatformat:"-2" }} / {{ full|floatformat:"-2" }}</div></div></div>
+  <div class="col-md-4"><div class="card card-body shadow-sm"><div class="text-muted small">Percentage</div><div class="fs-4">{{ percentage }}%</div></div></div>
+  <div class="col-md-4"><div class="card card-body shadow-sm"><div class="text-muted small">Overall</div><div class="fs-4">{% if passed_all %}Pass{% else %}Fail{% endif %}</div></div></div>
+</div>
+{% endif %}
+
+{% if user.role != 'student' %}
+  <a href="{% url 'students:detail' student.pk %}" class="btn btn-outline-secondary mt-3">Back to student</a>
+{% endif %}
+{% endblock %}

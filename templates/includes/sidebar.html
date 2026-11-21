@@ -1,0 +1,41 @@
+<aside class="sidebar bg-dark text-white p-3">
+  <a href="{% url 'accounts:dashboard' %}" class="d-block mb-4 fs-5 text-white text-decoration-none">SMS</a>
+
+  <ul class="nav flex-column">
+    <li class="nav-item">
+      <a class="nav-link text-white-50" href="{% url 'accounts:dashboard' %}">Dashboard</a>
+    </li>
+
+    {% if user.is_superuser or user.role == 'admin' %}
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:departments' %}">Departments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:list' %}">Courses</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:subjects' %}">Subjects</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:enrollments' %}">Enrollments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:mark' %}">Take Attendance</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance Records</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:exams' %}">Exams and Marks</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:list' %}">Fees</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:structures' %}">Fee Structures</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'payments:list' %}">Payments</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'reports:home' %}">Reports</a></li>
+
+    {% elif user.role == 'teacher' %}
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'students:list' %}">Students</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'courses:subjects' %}">My Subjects</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:mark' %}">Take Attendance</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">Attendance Records</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:exams' %}">Exams and Marks</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'reports:home' %}">Reports</a></li>
+
+    {% else %}
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'attendance:list' %}">My Attendance</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'results:my' %}">My Results</a></li>
+      <li class="nav-item"><a class="nav-link text-white-50" href="{% url 'fees:list' %}">My Fees</a></li>
+    {% endif %}
+
+    <li class="nav-item">
+      <a class="nav-link text-white-50" href="{% url 'accounts:password_change' %}">Change Password</a>
+    </li>
+  </ul>
+</aside>

@@ -1,0 +1,40 @@
+{% extends 'base_public.html' %}
+{% block title %}Contact us - {{ site.name }}{% endblock %}
+{% block content %}
+<section class="container py-5" style="max-width: 1000px;">
+  <h1 class="mb-4">Contact us</h1>
+  <div class="row g-4">
+    <div class="col-md-5">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h5>{{ site.college }}</h5>
+          <p class="mb-2"><strong>Address</strong><br>{{ site.address }}</p>
+          <p class="mb-2"><strong>Phone</strong><br>{{ site.phone }}</p>
+          <p class="mb-2"><strong>Email</strong><br>{{ site.email }}</p>
+          <p class="mb-0"><strong>Office hours</strong><br>{{ site.hours }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-7">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h5 class="mb-3">Send us a message</h5>
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div style="display:none;" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></div>
+            {{ form.non_field_errors }}
+            {% for field in form %}
+              <div class="mb-3">
+                <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+              </div>
+            {% endfor %}
+            <button class="btn btn-primary">Send message</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

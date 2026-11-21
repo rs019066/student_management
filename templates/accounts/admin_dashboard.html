@@ -1,6 +1,71 @@
 {% extends 'base.html' %}
 {% block title %}Admin Dashboard{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
 {% block content %}
-<h3>Admin Dashboard</h3>
-<p>Welcome, {{ user.username }}. Student, course and fee management will appear here.</p>
+
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Students</div><div class="fs-3">{{ student_count }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Teachers</div><div class="fs-3">{{ teacher_count }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active courses</div><div class="fs-3">{{ course_count }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active subjects</div><div class="fs-3">{{ subject_count }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Active enrollments</div><div class="fs-3">{{ enrollment_count }}</div></div></div>
+
+  <div class="col-6 col-lg-3">
+    <div class="card card-body shadow-sm">
+      <div class="text-muted small">Today's attendance</div>
+      <div class="fs-3">{% if today_percentage is not None %}{{ today_percentage }}%{% else %}-{% endif %}</div>
+      <div class="text-muted small">{{ today_total }} record{{ today_total|pluralize }} marked</div>
+    </div>
+  </div>
+
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Fees collected</div><div class="fs-3">Rs. {{ fee_paid|floatformat:0 }}</div></div></div>
+  <div class="col-6 col-lg-3"><div class="card card-body shadow-sm"><div class="text-muted small">Fees outstanding</div><div class="fs-3">Rs. {{ fee_balance|floatformat:0 }}</div></div></div>
+  <div class="col-6 col-lg-3">
+    <div class="card card-body shadow-sm">
+      <div class="text-muted small">Overdue fees</div>
+      <div class="fs-3 {% if overdue_count %}text-danger{% endif %}">{{ overdue_count }}</div>
+      <a href="{% url 'fees:list' %}?status=pending" class="small">View fees</a>
+    </div>
+  </div>
+</div>
+
+<div class="mb-4 d-flex flex-wrap gap-2">
+  <a href="{% url 'students:add' %}" class="btn btn-primary">Add student</a>
+  <a href="{% url 'courses:enrollment_add' %}" class="btn btn-outline-primary">Add enrollment</a>
+  <a href="{% url 'attendance:mark' %}" class="btn btn-outline-primary">Take attendance</a>
+  <a href="{% url 'results:exam_add' %}" class="btn btn-outline-primary">Add exam</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-header">Recently added students</div>
+      <ul class="list-group list-group-flush">
+        {% for s in recent_students %}
+          <li class="list-group-item d-flex justify-content-between">
+            <a href="{% url 'students:detail' s.pk %}">{{ s.user.get_full_name|default:s.user.username }}</a>
+            <span class="text-muted">{{ s.student_id }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No students yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-header">Recent exams</div>
+      <ul class="list-group list-group-flush">
+        {% for e in recent_exams %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ e.name }} - {{ e.subject.name }}</span>
+            <span class="text-muted">{{ e.date|date:"Y-m-d" }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No exams yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %}

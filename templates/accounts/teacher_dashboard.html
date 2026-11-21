@@ -1,6 +1,58 @@
 {% extends 'base.html' %}
 {% block title %}Teacher Dashboard{% endblock %}
+{% block page_title %}Teacher Dashboard{% endblock %}
 {% block content %}
-<h3>Teacher Dashboard</h3>
-<p>Welcome, {{ user.username }}. Attendance and marks entry will appear here.</p>
+
+<div class="mb-4 d-flex flex-wrap gap-2">
+  <a href="{% url 'attendance:mark' %}" class="btn btn-primary">Take attendance</a>
+  <a href="{% url 'results:exams' %}" class="btn btn-outline-primary">Exams and marks</a>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-header">My subjects</div>
+      <ul class="list-group list-group-flush">
+        {% for row in subject_rows %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ row.subject.code }} - {{ row.subject.name }} <span class="text-muted small">({{ row.subject.course.code }}, Sem {{ row.subject.semester }})</span></span>
+            <span class="badge text-bg-secondary">{{ row.student_count }} student{{ row.student_count|pluralize }}</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No subjects are assigned to you yet. Ask an admin to set you as the teacher of a subject.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card shadow-sm mb-3">
+      <div class="card-header">Recent attendance</div>
+      <ul class="list-group list-group-flush">
+        {% for s in recent_sessions %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ s.subject__name }}</span>
+            <span class="text-muted">{{ s.date|date:"Y-m-d" }} ({{ s.total }} marked)</span>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No attendance marked yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header">My exams</div>
+      <ul class="list-group list-group-flush">
+        {% for e in exams %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ e.name }} - {{ e.subject.name }}</span>
+            <a href="{% url 'results:marks' e.pk %}">{{ e.result_count }} entered</a>
+          </li>
+        {% empty %}
+          <li class="list-group-item text-muted">No exams yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
 {% endblock %}
