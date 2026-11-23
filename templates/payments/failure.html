@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Payment not completed{% endblock %}
+{% block page_title %}Payment not completed{% endblock %}
+{% block content %}
+<div class="alert alert-warning" role="alert">
+  <h4 class="alert-heading">Payment was not completed.</h4>
+  <p>No amount was added to your fee. You can return to the fee page and try again.</p>
+  <hr>
+  <p class="mb-0">Payment status: <strong>{{ payment.get_status_display }}</strong></p>
+</div>
+<a href="{% url 'fees:detail' payment.student_fee.pk %}" class="btn btn-primary">Return to fee</a>
+{% endblock %}

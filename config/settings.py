@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -55,6 +56,10 @@ LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGOUT_REDIRECT_URL = 'pages:home'
 ALLOW_STUDENT_SIGNUP = True
+# Khalti KPG-2 sandbox configuration. Set KHALTI_SECRET_KEY outside source control.
+KHALTI_SECRET_KEY = os.environ.get("KHALTI_SECRET_KEY", "")
+KHALTI_API_BASE_URL = os.environ.get("KHALTI_API_BASE_URL", "https://dev.khalti.com/api/v2")
+KHALTI_WEBSITE_URL = os.environ.get("KHALTI_WEBSITE_URL", "http://127.0.0.1:8000/")
 
 TIME_ZONE = 'Asia/Kathmandu'
 

@@ -1,8 +1,6 @@
 from decimal import Decimal
-
 from django.db import transaction
 from django.utils import timezone
-
 from fees.models import StudentFee
 from .models import Payment
 
@@ -23,7 +21,7 @@ def _apply_to_fee(fee, amount):
 
 @transaction.atomic
 def record_payment(student_fee, amount, method, user, remarks=""):
-    """Manual payment (cash or bank voucher) entered by an admin. Saved as successful straight away."""
+    """Record a successful cash or bank payment entered by an admin."""
     fee = StudentFee.objects.select_for_update().get(pk=student_fee.pk)
     amount = Decimal(str(amount))
     if fee.status == StudentFee.Status.WAIVED:
@@ -42,7 +40,7 @@ def record_payment(student_fee, amount, method, user, remarks=""):
 
 @transaction.atomic
 def create_pending_payment(student_fee, method, amount=None):
-    """Person 2 calls this when the student clicks Pay Now. Defaults to the full balance."""
+    """Create one pending payment before redirecting the student to a gateway."""
     fee = StudentFee.objects.select_for_update().get(pk=student_fee.pk)
     amount = fee.balance if amount is None else Decimal(str(amount))
     if amount <= 0 or amount > fee.balance:
@@ -52,8 +50,7 @@ def create_pending_payment(student_fee, method, amount=None):
 
 @transaction.atomic
 def mark_payment_success(payment, gateway_reference="", response=None):
-    """Person 2 calls this ONLY after the gateway has confirmed the payment on the server.
-    Returns False if the payment was already handled, so a refreshed page cannot count twice."""
+    """Mark a pending gateway payment successful exactly once."""
     payment = Payment.objects.select_for_update().get(pk=payment.pk)
     if payment.status != Payment.Status.PENDING:
         return False
@@ -69,10 +66,11 @@ def mark_payment_success(payment, gateway_reference="", response=None):
 
 @transaction.atomic
 def mark_payment_failed(payment, response=None):
+    """Mark a pending gateway payment failed exactly once."""
     payment = Payment.objects.select_for_update().get(pk=payment.pk)
     if payment.status != Payment.Status.PENDING:
         return False
     payment.status = Payment.Status.FAILED
     payment.gateway_response = response or {}
-    payment.save()
+    payment.save(update_fields=["status", "gateway_response"])
     return True
