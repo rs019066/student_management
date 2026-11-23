@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}Receipt {{ payment.receipt_number }}{% endblock %}
+{% block page_title %}Receipt{% endblock %}
+{% block content %}
+<div class="card shadow-sm" style="max-width: 640px;">
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <h4 class="mb-0">Payment receipt</h4>
+      <span class="text-muted">{{ payment.receipt_number }}</span>
+    </div>
+    <hr>
+    <dl class="row mb-0">
+      <dt class="col-sm-4">Student</dt><dd class="col-sm-8">{{ fee.student.user.get_full_name|default:fee.student.user.username }} ({{ fee.student.student_id }})</dd>
+      <dt class="col-sm-4">Course</dt><dd class="col-sm-8">{{ fee.fee_structure.course.name }}</dd>
+      <dt class="col-sm-4">Fee</dt><dd class="col-sm-8">{{ fee.fee_structure.name }}</dd>
+      <dt class="col-sm-4">Amount paid</dt><dd class="col-sm-8"><strong>Rs. {{ payment.amount|floatformat:2 }}</strong></dd>
+      <dt class="col-sm-4">Method</dt><dd class="col-sm-8">{{ payment.get_method_display }}</dd>
+      <dt class="col-sm-4">Date</dt><dd class="col-sm-8">{{ payment.paid_at|date:"Y-m-d H:i" }}</dd>
+      <dt class="col-sm-4">Transaction ID</dt><dd class="col-sm-8">{{ payment.transaction_id }}</dd>
+      {% if payment.remarks %}<dt class="col-sm-4">Remarks</dt><dd class="col-sm-8">{{ payment.remarks }}</dd>{% endif %}
+      {% if payment.recorded_by %}<dt class="col-sm-4">Received by</dt><dd class="col-sm-8">{{ payment.recorded_by.get_full_name|default:payment.recorded_by.username }}</dd>{% endif %}
+      <dt class="col-sm-4">Fee balance now</dt><dd class="col-sm-8">Rs. {{ fee.balance|floatformat:2 }}</dd>
+    </dl>
+  </div>
+</div>
+<div class="mt-3 d-print-none">
+  <button onclick="window.print()" class="btn btn-primary">Print</button>
+  <a href="{% url 'fees:detail' fee.pk %}" class="btn btn-outline-secondary">Back</a>
+</div>
+{% endblock %}
