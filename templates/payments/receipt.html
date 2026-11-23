@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Payment receipt{% endblock %}
+{% block page_title %}Payment receipt{% endblock %}
+{% block content %}
+<div class="card shadow-sm" style="max-width: 720px;">
+  <div class="card-header bg-success text-white">Payment successful</div>
+  <div class="card-body">
+    <h5 class="card-title">Receipt #{{ payment.receipt_number }}</h5>
+    <dl class="row mb-0">
+      <dt class="col-sm-5">Student</dt><dd class="col-sm-7">{{ fee.student.student_id }} - {{ fee.student.user.get_full_name|default:fee.student.user.username }}</dd>
+      <dt class="col-sm-5">Fee</dt><dd class="col-sm-7">{{ fee.fee_structure.name }}</dd>
+      <dt class="col-sm-5">Amount paid</dt><dd class="col-sm-7">Rs. {{ payment.amount|floatformat:2 }}</dd>
+      <dt class="col-sm-5">Payment method</dt><dd class="col-sm-7">{{ payment.get_method_display }}</dd>
+      <dt class="col-sm-5">Gateway reference</dt><dd class="col-sm-7">{{ payment.gateway_reference|default:"-" }}</dd>
+      <dt class="col-sm-5">Paid at</dt><dd class="col-sm-7">{{ payment.paid_at|date:"Y-m-d H:i" }}</dd>
+      <dt class="col-sm-5">Status</dt><dd class="col-sm-7"><span class="badge text-bg-success">{{ payment.get_status_display }}</span></dd>
+    </dl>
+    <div class="mt-4">
+      <a href="{% url 'fees:detail' fee.pk %}" class="btn btn-primary">Back to fee</a>
+      <button type="button" class="btn btn-outline-secondary" onclick="window.print()">Print receipt</button>
+    </div>
+  </div>
+</div>
+{% endblock %}

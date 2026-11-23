@@ -6,10 +6,12 @@
   <div class="card-body">
     <h5>{{ fee.fee_structure.name }}</h5>
     <p class="mb-1">Amount to pay: <strong>Rs. {{ fee.balance|floatformat:2 }}</strong></p>
-    <div class="alert alert-info mt-3">
-      Online payment is not connected yet. Please pay at the college counter, and the admin will record it. You will then see your receipt here.
-    </div>
-    <a href="{% url 'fees:detail' fee.pk %}" class="btn btn-outline-secondary">Back</a>
+    <p class="text-muted">You will be redirected to Khalti's secure checkout page.</p>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success">Continue to Khalti</button>
+      <a href="{% url 'fees:detail' fee.pk %}" class="btn btn-outline-secondary">Back</a>
+    </form>
   </div>
 </div>
 {% endblock %}
