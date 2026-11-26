@@ -23,7 +23,7 @@ def payment_list(request):
     if status in dict(Payment.Status.choices):
         payments = payments.filter(status=status)
     page_obj = Paginator(payments, 20).get_page(request.GET.get("page"))
-    return render(request, "payments/payments_list.html", {
+    return render(request, "payments/payment_list.html", {
         "payments": page_obj, "page_obj": page_obj, "status": status, "statuses": Payment.Status.choices,
     })
 

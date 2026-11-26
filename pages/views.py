@@ -3,13 +3,19 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.db.models import Count
+from courses.models import Course
 
 from .forms import ContactForm, StudentSignupForm
 
 
 def home(request):
-    return render(request, "pages/home.html")
-
+    courses = (
+        Course.objects.filter(is_active=True)
+        .select_related("department")
+        .annotate(subject_count=Count("subjects"))[:4]
+    )
+    return render(request, "pages/home.html", {"courses": courses})
 
 def about(request):
     return render(request, "pages/about.html")

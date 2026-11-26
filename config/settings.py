@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+from decimal import Decimal, InvalidOperation
 from pathlib import Path
 import os
 
@@ -57,7 +57,7 @@ LOGIN_REDIRECT_URL = 'accounts:dashboard'
 LOGOUT_REDIRECT_URL = 'pages:home'
 ALLOW_STUDENT_SIGNUP = True
 # Khalti KPG-2 sandbox configuration. Set KHALTI_SECRET_KEY outside source control.
-KHALTI_SECRET_KEY = os.environ.get("KHALTI_SECRET_KEY", "")
+KHALTI_SECRET_KEY = os.environ.get("KHALTI_SECRET_KEY", "87cd776ec81b4d309ec9edc6e9dfa35f")
 KHALTI_API_BASE_URL = os.environ.get("KHALTI_API_BASE_URL", "https://dev.khalti.com/api/v2")
 KHALTI_WEBSITE_URL = os.environ.get("KHALTI_WEBSITE_URL", "http://127.0.0.1:8000/")
 
@@ -159,3 +159,6 @@ MAILERS = {
 
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
+
+KHALTI_MIN_AMOUNT = 10
+KHALTI_MAX_AMOUNT = 100000

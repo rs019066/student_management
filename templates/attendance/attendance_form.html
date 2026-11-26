@@ -1,6 +1,24 @@
-{% extends "base.html" %}{% block content %}
-<h1>Record attendance</h1>
-<form method="post">
-  {% csrf_token %}{{ form.as_p }}<button type="submit">Save</button>
-</form>
+{% extends 'base.html' %}
+{% block title %}Add attendance record{% endblock %}
+{% block page_title %}Add attendance record{% endblock %}
+{% block content %}
+<div style="max-width: 720px;">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row g-3">
+          {% for field in form %}
+            <div class="{% if field.name == 'remarks' %}col-12{% else %}col-md-6{% endif %}">
+              {% include 'includes/form_field.html' with field=field %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary px-4">Save</button>
+    <a href="{% url 'attendance:list' %}" class="btn btn-outline-secondary">Cancel</a>
+  </form>
+</div>
 {% endblock %}

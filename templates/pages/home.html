@@ -3,48 +3,138 @@
 {% block content %}
 
 <section class="hero">
-  <div class="container text-center">
-    <h1 class="display-5 fw-bold">{{ site.name }}</h1>
-    <p class="lead mx-auto" style="max-width: 640px;">
-      One place for {{ site.college }} to manage students, courses, attendance, results and fees.
-    </p>
-    <div class="d-flex justify-content-center gap-2 flex-wrap mt-4">
-      {% if user.is_authenticated %}
-        <a href="{% url 'accounts:dashboard' %}" class="btn btn-light btn-lg">Go to dashboard</a>
-      {% else %}
-        <a href="{% url 'accounts:login' %}" class="btn btn-light btn-lg">Login</a>
-        {% if allow_signup %}<a href="{% url 'pages:signup' %}" class="btn btn-outline-light btn-lg">Student sign up</a>{% endif %}
-      {% endif %}
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="pill mb-3">Made by students, for our college</span>
+        <h1 class="mb-3">Your attendance, results and fees, <span class="accent">all in one place.</span></h1>
+        <p class="lead text-muted mb-4" style="max-width: 560px;">
+          Sign up with your student details, get enrolled by the admin, and check how you are doing any time of day. No more chasing notices on the board.
+        </p>
+        <div class="d-flex flex-wrap gap-2">
+          {% if user.is_authenticated %}
+            <a href="{% url 'accounts:dashboard' %}" class="btn btn-primary btn-lg">Open my dashboard</a>
+          {% else %}
+            {% if allow_signup %}<a href="{% url 'pages:signup' %}" class="btn btn-primary btn-lg">Create student account</a>{% endif %}
+            <a href="{% url 'accounts:login' %}" class="btn btn-outline-primary btn-lg">Login</a>
+          {% endif %}
+        </div>
+        <div class="mini-badges mt-4">
+          <span><i class="bi bi-check-circle-fill"></i>Live attendance</span>
+          <span><i class="bi bi-check-circle-fill"></i>Printable receipts</span>
+          <span><i class="bi bi-check-circle-fill"></i>Pay fees online</span>
+          <span><i class="bi bi-check-circle-fill"></i>Works on your phone</span>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="preview-card">
+          <div class="d-flex justify-content-between align-items-center">
+            <strong>My dashboard</strong>
+            <span class="pill">Sample view</span>
+          </div>
+          <div class="preview-row">
+            <div class="ico"><i class="bi bi-calendar-check"></i></div>
+            <div class="flex-grow-1"><div class="label">Attendance</div><div class="value">92%</div></div>
+            <span class="badge text-bg-success">Good</span>
+          </div>
+          <div class="preview-row">
+            <div class="ico"><i class="bi bi-journal-check"></i></div>
+            <div class="flex-grow-1"><div class="label">Latest result</div><div class="value">Midterm: Grade A</div></div>
+          </div>
+          <div class="preview-row">
+            <div class="ico"><i class="bi bi-wallet2"></i></div>
+            <div class="flex-grow-1"><div class="label">Fee balance</div><div class="value">Rs. 0</div></div>
+            <span class="badge text-bg-success">Paid</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="container py-5">
-  <h2 class="text-center mb-4">What you can do</h2>
+  <div class="text-center mb-5">
+    <h2 class="mb-2">What you can do here</h2>
+    <p class="text-muted mb-0">The everyday things, without the paperwork.</p>
+  </div>
   <div class="row g-4">
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Attendance</h5><p class="text-muted mb-0">Teachers mark the whole class in one page. Students check their own attendance percentage at any time.</p></div></div></div>
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Exams and results</h5><p class="text-muted mb-0">Teachers enter marks, and students see their report card with grades and pass or fail.</p></div></div></div>
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Fees and receipts</h5><p class="text-muted mb-0">Students see what they owe and what they have paid, and every payment gets a printable receipt.</p></div></div></div>
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Courses and subjects</h5><p class="text-muted mb-0">Departments, courses, subjects and enrollments are all managed in one place.</p></div></div></div>
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Reports</h5><p class="text-muted mb-0">Attendance, results and fee reports can be downloaded as CSV or PDF.</p></div></div></div>
-    <div class="col-md-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><h5>Role-based access</h5><p class="text-muted mb-0">Admins, teachers and students each see only the pages and data meant for them.</p></div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-calendar-check"></i></div>
+      <h5>Attendance you can see</h5>
+      <p class="text-muted mb-0">Teachers mark the whole class in one go. You can check your own attendance and percentage whenever you like.</p>
+    </div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-journal-check"></i></div>
+      <h5>Results and report cards</h5>
+      <p class="text-muted mb-0">Marks are entered once and turn into a clear report card with grades and pass or fail.</p>
+    </div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-wallet2"></i></div>
+      <h5>Fees and receipts</h5>
+      <p class="text-muted mb-0">See what you owe, pay online or at the counter, and print your receipt when you are done.</p>
+    </div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-book"></i></div>
+      <h5>Courses and subjects</h5>
+      <p class="text-muted mb-0">Departments, courses and subjects stay tidy, so nobody has to dig through spreadsheets.</p>
+    </div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-file-earmark-bar-graph"></i></div>
+      <h5>Reports on demand</h5>
+      <p class="text-muted mb-0">Teachers and admins can download attendance, result and fee reports as CSV or PDF.</p>
+    </div></div></div>
+    <div class="col-md-6 col-lg-4"><div class="card feature-card h-100"><div class="card-body p-4">
+      <div class="feature-icon"><i class="bi bi-phone"></i></div>
+      <h5>Works on your phone</h5>
+      <p class="text-muted mb-0">The pages fit small screens, so you can check things between classes.</p>
+    </div></div></div>
   </div>
 </section>
 
-<section class="bg-white py-5 border-top border-bottom">
+{% if courses %}
+<section class="bg-white border-top border-bottom py-5">
   <div class="container">
-    <h2 class="text-center mb-4">How it works for students</h2>
-    <div class="row g-4 text-center">
-      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">1</div><h5>Sign up</h5><p class="text-muted">Create your student account in a minute.</p></div>
-      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">2</div><h5>Get enrolled</h5><p class="text-muted">The admin enrolls you in your course.</p></div>
-      <div class="col-md-4"><div class="fs-1 fw-bold text-primary">3</div><h5>Track everything</h5><p class="text-muted">See attendance, results and fees on your dashboard.</p></div>
+    <div class="mb-4">
+      <h2 class="mb-1">Courses at {{ site.college }}</h2>
+      <p class="text-muted mb-0">Contact us if you would like to join one of them.</p>
+    </div>
+    <div class="row g-4">
+      {% for c in courses %}
+      <div class="col-md-6 col-lg-3">
+        <div class="card course-card h-100"><div class="card-body p-4 d-flex flex-column">
+          <span class="tag align-self-start mb-3">{{ c.department.name }}</span>
+          <h5 class="mb-2">{{ c.name }}</h5>
+          <p class="text-muted small mb-3">{{ c.duration_years }} year{{ c.duration_years|pluralize }} | {{ c.subject_count }} subject{{ c.subject_count|pluralize }}</p>
+          <a href="{% url 'pages:contact' %}" class="btn btn-soft btn-sm mt-auto align-self-start">Ask about this course</a>
+        </div></div>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
+{% endif %}
 
-<section class="container py-5 text-center">
-  <h2>Have a question?</h2>
-  <p class="text-muted">Our team is happy to help.</p>
-  <a href="{% url 'pages:contact' %}" class="btn btn-primary">Contact us</a>
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="mb-2">How it works for students</h2>
+    <p class="text-muted mb-0">Three steps and you are in.</p>
+  </div>
+  <div class="row g-4 text-center">
+    <div class="col-md-4"><div class="step-num">1</div><h5>Sign up</h5><p class="text-muted">Make your student account. It takes about a minute.</p></div>
+    <div class="col-md-4"><div class="step-num">2</div><h5>Get enrolled</h5><p class="text-muted">The admin adds you to your course.</p></div>
+    <div class="col-md-4"><div class="step-num">3</div><h5>Check your dashboard</h5><p class="text-muted">Attendance, results and fees are all there.</p></div>
+  </div>
 </section>
+
+<section class="container pb-4">
+  <div class="cta-band d-flex flex-wrap justify-content-between align-items-center gap-3">
+    <div>
+      <h2 class="mb-1">Have a question about your account?</h2>
+      <p class="mb-0 opacity-75">Send us a message and we will get back to you.</p>
+    </div>
+    <a href="{% url 'pages:contact' %}" class="btn btn-white btn-lg">Contact us</a>
+  </div>
+</section>
+
 {% endblock %}
